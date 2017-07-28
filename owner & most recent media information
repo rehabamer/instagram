@@ -1,0 +1,47 @@
+install.packages('instaR')
+library(instaR)
+require(httr)
+require(rjson)
+require(RCurl)
+
+#Authentication
+
+options(RCurlOptions = list(verbose = FALSE, capath = system.file("CurlSSL", "cacert.pem", package = "RCurl"), ssl.verifypeer = FALSE))
+
+## getting callback URL
+full_url <- oauth_callback()
+full_url <- gsub("(.*localhost:[0-9]{1,5}/).*", x=full_url, replacement="\\1")
+message <- paste("Copy and paste into Site URL on Instagram App Settings:", 
+                 full_url, "\nWhen done, press any key to continue...")
+
+invisible(readline(message))
+
+
+app_name <- "xxxxx"
+client_id <- "xxxxx"
+client_secret <- "xxxxx"
+scope = "public_content"
+
+instagram <- oauth_endpoint(
+  authorize = "https://api.instagram.com/oauth/authorize",
+  access = "https://api.instagram.com/oauth/access_token")  
+myapp <- oauth_app(app_name, client_id, client_secret)
+
+
+instaOAuth(client_id, client_secret, scope = c("public_content"))
+save(ig_oauth, file = "ig_oauth")
+
+#get owner information 
+
+owner_info_end_point <- paste("https://api.instagram.com/v1/users/self/?access_token=2984487302.9b50181.6374510e8e9f4101a66f5829a03f0976",my_access_token,sep = "")
+require(RCurl)
+data<- getURI(owner_info_end_point)
+json<- fromJSON(data)
+json
+
+# get user user_media_recent
+user_media_recent_end_point <- paste("https://api.instagram.com/v1/users/self/media/recent/?access_token=2984487302.9b50181.6374510e8e9f4101a66f5829a03f0976",my_access_token,sep = "")
+require(RCurl)
+data<- getURI(user_media_recent_end_point)
+json<- fromJSON(data)
+json
