@@ -1,0 +1,51 @@
+install.packages('instaR')
+library(instaR)
+require(httr)
+require(rjson)
+require(RCurl)
+install.packages("curl")
+
+#Authentication
+
+options(RCurlOptions = list(verbose = FALSE, capath = system.file("CurlSSL", "cacert.pem", package = "RCurl"), ssl.verifypeer = FALSE))
+
+## getting callback URL
+full_url <- oauth_callback()
+full_url <- gsub("(.*localhost:[0-9]{1,5}/).*", x=full_url, replacement="\\1")
+message <- paste("Copy and paste into Site URL on Instagram App Settings:", 
+                 full_url, "\nWhen done, press any key to continue...")
+
+invisible(readline(message))
+
+
+app_name <- "xxxxxxxxx"
+client_id <- "xxxxxxxxx"
+client_secret <- "xxxxxxxxx"
+scope = "public_content"
+
+instagram <- oauth_endpoint(
+  authorize = "https://api.instagram.com/oauth/authorize",
+  access = "https://api.instagram.com/oauth/access_token")  
+myapp <- oauth_app(app_name, client_id, client_secret)
+
+
+
+
+ig_oauth<- instaOAuth(client_id, client_secret, scope = c("public_content"))
+
+
+##################### hashtag count function 
+
+got_count <- getTagCount(tag="gameofthrones", token = ig_oauth)
+
+cr7_count <- getTagCount(tag="cr7", token = ig_oauth)
+sport_count <- getTagCount(tag="sport", token = ig_oauth)
+nature_count <- getTagCount(tag="nature", token = ig_oauth)
+addidas_count <- getTagCount(tag="addidas", token = ig_oauth)
+trump_count <- getTagCount(tag="trump", token = ig_oauth)
+army_count <- getTagCount(tag="army", token = ig_oauth)
+cairo_count <- getTagCount(tag="cairo", token = ig_oauth)
+egypt_count <- getTagCount(tag="egypt", token = ig_oauth)
+arab_count <- getTagCount(tag="arab", token = ig_oauth)
+
+#################
