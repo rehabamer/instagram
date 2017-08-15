@@ -1,0 +1,43 @@
+install.packages('instaR')
+library(instaR)
+require(httr)
+require(rjson)
+require(RCurl)
+install.packages("igraph" , repos="https://cran.rstudio.com/" )
+library(igraph)
+library(ggplot2)
+
+#Authentication
+
+options(RCurlOptions = list(verbose = FALSE, capath = system.file("CurlSSL", "cacert.pem", package = "RCurl"), ssl.verifypeer = FALSE))
+
+## getting callback URL
+full_url <- oauth_callback()
+full_url <- gsub("(.*localhost:[0-9]{1,5}/).*", x=full_url, replacement="\\1")
+message <- paste("Copy and paste into Site URL on Instagram App Settings:", 
+                 full_url, "\nWhen done, press any key to continue...")
+
+invisible(readline(message))
+
+
+app_name <- "xxxxxx"
+client_id <- "xxxxxxxxxxx"
+client_secret <- "xxxxxxxxxxx"
+scope = "public_content"
+
+instagram <- oauth_endpoint(
+  authorize = "https://api.instagram.com/oauth/authorize",
+  access = "https://api.instagram.com/oauth/access_token")  
+myapp <- oauth_app(app_name, client_id, client_secret)
+instaOAuth(client_id, client_secret, scope = c("public_content"))
+
+#### get user
+
+ruby <- getFollowers( username="ruby_amer88", token=ig_oauth )
+getFollowers(username, token, userid = NULL, verbose = TRUE)
+instaOAuth(client_id, client_secret, scope = c("public_content"))
+R_info <- getUser("ruby_amer88", token = ig_oauth)
+
+#### get user media 
+
+Rehab_media <-getUserMedia(username = "ruby_amer88" , token = ig_oauth )
