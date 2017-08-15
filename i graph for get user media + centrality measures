@@ -1,0 +1,66 @@
+install.packages('instaR')
+library(instaR)
+require(httr)
+require(rjson)
+require(RCurl)
+install.packages("igraph" , repos="https://cran.rstudio.com/" )
+library(igraph)
+library(ggplot2)
+
+
+#Authentication
+
+options(RCurlOptions = list(verbose = FALSE, capath = system.file("CurlSSL", "cacert.pem", package = "RCurl"), ssl.verifypeer = FALSE))
+
+## getting callback URL
+full_url <- oauth_callback()
+full_url <- gsub("(.*localhost:[0-9]{1,5}/).*", x=full_url, replacement="\\1")
+message <- paste("Copy and paste into Site URL on Instagram App Settings:", 
+                 full_url, "\nWhen done, press any key to continue...")
+
+invisible(readline(message))
+
+
+app_name <- "XXXXXX"
+client_id <- "XXXXXX"
+client_secret <- "XXXXXX"
+scope = "public_content"
+
+instagram <- oauth_endpoint(
+  authorize = "https://api.instagram.com/oauth/authorize",
+  access = "https://api.instagram.com/oauth/access_token")  
+myapp <- oauth_app(app_name, client_id, client_secret)
+
+
+instaOAuth(client_id, client_secret, scope = c("public_content"))
+
+
+Hisham_pics <-getUserMedia(username = "hishamelwakeil" , token = ig_oauth )
+Eian_pics <-getUserMedia(username = "eian_foad" , token = ig_oauth )
+abdallah_pics <-getUserMedia(username = "abdallah.elsayd" , token = ig_oauth )
+mohammed_pics <-getUserMedia(username = "moh_bn_7sn" , token = ig_oauth )
+Rehab_pics <-getUserMedia(username = "ruby_amer88" , token = ig_oauth )
+
+users_media <- c(Hisham_pics,Eian_pics,abdallah_pics,mohammed_pics,Rehab_pics)
+user_name <- c("hishamelwakeil","eian_foad","abdallah.elsayd","moh_bn_7sn","ruby_amer88")
+users.media <- data.frame(user_name=user_name,users_media=users_media)
+
+
+#  i graph from user media
+
+media_graph <- graph.data.frame(users.media, directed = n)
+
+V(media_graph)$label <- V(media_graph)$name
+
+plot.igraph(media_graph) 
+
+betweenness(media_graph,directed = FALSE)
+degree(media_graph,mode="all")
+plot(media_graph,vertex.size=degree(media_graph)*10)
+
+#betweennes
+
+betweenness(media_graph,directed = FALSE)
+degree(media_graph,mode="all")
+plot(media_graph,vertex.size=betweenness(media_graph)*10)
+
